@@ -154,6 +154,23 @@ SourceFix includes a dedicated **Supplier Admin Dashboard** accessible at:
 
 ---
 
+## 🌐 Deploying to Vercel & Production
+
+### 1. Deploying Frontend to Vercel
+1. Import your GitHub repository (`https://github.com/AdeenaRamzan/Source-fix`) into [Vercel](https://vercel.com).
+2. Vercel automatically detects `vercel.json` with Next.js configuration.
+3. Add Environment Variable:
+   - `SOURCEFIX_BACKEND_URL`: URL of your deployed FastAPI backend (e.g. `https://sourcefix-backend.onrender.com`).
+4. Click **Deploy**.
+
+### 2. Deploying FastAPI + SQLite Backend (Render / Railway / Fly.io)
+Deploy the `backend/` directory to any Python service host (Render, Railway, Fly.io):
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- **Environment Variables**: `GROQ_API_KEY=gsk_your_groq_api_key`
+
+---
+
 ## 🧪 Running Tests & Verification
 
 ### Run Pytest Suite (25 Tests)

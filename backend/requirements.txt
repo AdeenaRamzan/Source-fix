@@ -1,0 +1,16 @@
+# Deterministic core (app/agent/tools.py) has no dependencies beyond the
+# standard library. These are needed for the agent loop added on top of it.
+
+langgraph>=1.2,<2.0
+pytest>=8.0
+
+# app/agent/nodes.py talks to Groq over plain urllib (no SDK dependency),
+# reading GROQ_API_KEY from the environment at call time. It is used by both
+# propose_relaxation_node and rank_and_finalize_node.
+# Not required to run the test suite: tests inject fake llm_call callables
+# and never hit the network.
+
+# --- API layer (app/main.py) ---
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30
+python-dotenv>=1.0

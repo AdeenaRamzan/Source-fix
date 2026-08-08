@@ -1,0 +1,70 @@
+{
+  "product_id": "PRD-IOT-ENC-01",
+  "product_name": "Injection-Molded Enclosure for Industrial IoT Gateway",
+  "description": "Weatherproof (IP65) polycarbonate/ABS blend enclosure, 180mm x 120mm x 60mm, for an outdoor-rated industrial IoT gateway. Requires UV-stable resin, EMI shielding insert compatibility, and tight dimensional tolerance (+/- 0.15mm) for a snap-fit lid.",
+  "target_annual_volume_units": 180000,
+  "sourcing_event": "SourceFix Hackathon Track 1 - AI Manufacturing Decision Copilot",
+  "requirements": [
+    {
+      "field": "certification",
+      "label": "Quality Management Certification",
+      "requirement": "Must hold a currently valid ISO9001 or IATF16949 certificate (not expired, not suspended).",
+      "constraint_type": "hard",
+      "rationale": "Non-negotiable quality-system gate required by the end customer's automotive-adjacent supply chain policy."
+    },
+    {
+      "field": "monthly_capacity_units",
+      "label": "Minimum Monthly Production Capacity",
+      "requirement": "Must be able to sustain at least 20,000 units/month.",
+      "operator": ">=",
+      "value": 20000,
+      "constraint_type": "hard",
+      "rationale": "Below this threshold the supplier cannot cover ramp-up volume without a second source; treated as a capability gate, not a negotiating point."
+    },
+    {
+      "field": "quality_history_score",
+      "label": "Minimum Quality History Score",
+      "requirement": "Must have a quality history score of at least 85 (out of 100, based on defect rate / audit history / on-time delivery of prior lots).",
+      "operator": ">=",
+      "value": 85,
+      "constraint_type": "hard",
+      "rationale": "Track record below this score has historically correlated with field failures for enclosure parts; not commercially negotiable."
+    },
+    {
+      "field": "moq_units",
+      "label": "Maximum Minimum Order Quantity",
+      "requirement": "MOQ should be no more than 5,000 units.",
+      "operator": "<=",
+      "value": 5000,
+      "constraint_type": "soft",
+      "rationale": "Preferred ceiling for initial pilot batches; suppliers above this can often be negotiated down or split across a phased PO."
+    },
+    {
+      "field": "lead_time_days",
+      "label": "Maximum Lead Time",
+      "requirement": "Lead time should be no more than 45 days.",
+      "operator": "<=",
+      "value": 45,
+      "constraint_type": "soft",
+      "rationale": "Desired for launch schedule but expeditable freight or partial shipments can often close a small gap."
+    },
+    {
+      "field": "region",
+      "label": "Acceptable Manufacturing Regions",
+      "requirement": "Must manufacture in one of: North America, Western Europe, Southeast Asia.",
+      "acceptable_values": ["North America", "Western Europe", "Southeast Asia"],
+      "constraint_type": "soft",
+      "rationale": "Preferred for tariff exposure and logistics; a strong supplier outside these regions could still be considered with a landed-cost review."
+    },
+    {
+      "field": "sustainability_score",
+      "label": "Minimum Sustainability Score",
+      "requirement": "Sustainability score should be at least 60 (out of 100, based on emissions reporting, energy sourcing, waste handling).",
+      "operator": ">=",
+      "value": 60,
+      "constraint_type": "soft",
+      "rationale": "Aligns with buyer ESG goals; can be waived for an otherwise strong supplier pending a corrective action plan."
+    }
+  ],
+  "notes": "This brief was authored for the SourceFix hackathon prototype. No client-supplied dataset exists for this theme, so both this brief and the accompanying supplier list are synthetic test fixtures (see source_manifest.md)."
+}

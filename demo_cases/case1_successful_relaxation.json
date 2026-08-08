@@ -1,0 +1,1488 @@
+{
+  "case": "successful",
+  "description": "0-eligible baseline (full, unrelaxed constraints) -> one accepted soft-constraint relaxation -> ranked, cited shortlist.",
+  "llm_calls_note": "propose_relaxation_node and rank_and_finalize_node were called with deterministic stand-in functions (no live GROQ_API_KEY in this sandbox); the graph, guardrails, and FastAPI layer are all real. See generate_demo_cases.py for the exact stand-in responses used.",
+  "step_A_baseline_zero_eligible": {
+    "request": {
+      "method": "POST",
+      "path": "/api/baseline",
+      "body": {
+        "reference_date": "2026-08-08"
+      }
+    },
+    "response": {
+      "status_code": 200,
+      "body": {
+        "results": {
+          "SUP-001": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-001 (Zenith Molding Co.): certification ISO9001 is valid through 2027-03-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-001 (Zenith Molding Co.): monthly_capacity_units=25000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-001 (Zenith Molding Co.): quality_history_score=90 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-001 (Zenith Molding Co.): moq_units=3000 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-001 (Zenith Molding Co.): lead_time_days=40 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-001 (Zenith Molding Co.): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": false,
+              "reason": "SUP-001 (Zenith Molding Co.): sustainability_score=55 fails requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-002": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-002 (Nordic Precision Plastics): certification ISO9001 is valid through 2026-11-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-002 (Nordic Precision Plastics): monthly_capacity_units=30000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-002 (Nordic Precision Plastics): quality_history_score=88 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": false,
+              "reason": "SUP-002 (Nordic Precision Plastics): moq_units=6000 fails requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-002 (Nordic Precision Plastics): lead_time_days=35 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-002 (Nordic Precision Plastics): region='Western Europe' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-002 (Nordic Precision Plastics): sustainability_score=70 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-003": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-003 (Pacific Rim Enclosures): certification ISO9001 is valid through 2027-09-15.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-003 (Pacific Rim Enclosures): monthly_capacity_units=22000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-003 (Pacific Rim Enclosures): quality_history_score=86 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-003 (Pacific Rim Enclosures): moq_units=4500 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": false,
+              "reason": "SUP-003 (Pacific Rim Enclosures): lead_time_days=55 fails requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-003 (Pacific Rim Enclosures): region='Southeast Asia' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-003 (Pacific Rim Enclosures): sustainability_score=65 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-004": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-004 (Andes Manufacturing SA): certification ISO9001 is valid through 2028-01-20.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-004 (Andes Manufacturing SA): monthly_capacity_units=28000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-004 (Andes Manufacturing SA): quality_history_score=92 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-004 (Andes Manufacturing SA): moq_units=4000 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-004 (Andes Manufacturing SA): lead_time_days=30 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": false,
+              "reason": "SUP-004 (Andes Manufacturing SA): region='South America' is NOT in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-004 (Andes Manufacturing SA): sustainability_score=75 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-005": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-005 (Highland Injection Works): certification ISO9001 is valid through 2027-05-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": false,
+              "reason": "SUP-005 (Highland Injection Works): monthly_capacity_units=18000 fails requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-005 (Highland Injection Works): quality_history_score=89 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-005 (Highland Injection Works): moq_units=4800 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-005 (Highland Injection Works): lead_time_days=42 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-005 (Highland Injection Works): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-005 (Highland Injection Works): sustainability_score=68 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-006": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-006 (Delta Plastics Group): certification ISO9001 is valid through 2028-03-11.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-006 (Delta Plastics Group): monthly_capacity_units=24000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": false,
+              "reason": "SUP-006 (Delta Plastics Group): quality_history_score=80 fails requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-006 (Delta Plastics Group): moq_units=3500 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-006 (Delta Plastics Group): lead_time_days=38 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-006 (Delta Plastics Group): region='Western Europe' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-006 (Delta Plastics Group): sustainability_score=72 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-007": {
+            "certification": {
+              "passed": false,
+              "reason": "SUP-007 (Redwood Components): certification status is 'expired' (expiry_date 2024-05-01), not valid.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-007 (Redwood Components): monthly_capacity_units=26000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-007 (Redwood Components): quality_history_score=91 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-007 (Redwood Components): moq_units=4000 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-007 (Redwood Components): lead_time_days=40 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-007 (Redwood Components): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-007 (Redwood Components): sustainability_score=80 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-008": {
+            "certification": {
+              "passed": false,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): AMBIGUOUS certification record -- status field says 'expired' but expiry_date 2027-01-01 is still in the future as of 2026-08-08. Conflicting source data; does not count as a valid certification until verified.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): monthly_capacity_units=21000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): quality_history_score=87 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): moq_units=4200 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): lead_time_days=44 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): region='Southeast Asia' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-008 (Meridian Tooling Ltd.): sustainability_score=62 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-009": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): certification ISO9001 is valid through 2027-07-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): monthly_capacity_units=23000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): quality_history_score=88 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): moq_units=3800 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): lead_time_days=41 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): region='Southeast Asia' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": false,
+              "reason": "SUP-009 (Coastal Precision Manufacturing): field 'sustainability_score' is missing from this supplier record; cannot verify against the requirement.",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-010": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-010 (Iron Gate Fabrication): certification ISO9001 is valid through 2028-08-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": false,
+              "reason": "SUP-010 (Iron Gate Fabrication): monthly_capacity_units=19000 fails requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": false,
+              "reason": "SUP-010 (Iron Gate Fabrication): quality_history_score=78 fails requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": false,
+              "reason": "SUP-010 (Iron Gate Fabrication): moq_units=7000 fails requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": false,
+              "reason": "SUP-010 (Iron Gate Fabrication): lead_time_days=50 fails requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": false,
+              "reason": "SUP-010 (Iron Gate Fabrication): region='Eastern Europe' is NOT in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": false,
+              "reason": "SUP-010 (Iron Gate Fabrication): sustainability_score=40 fails requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-011": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-011 (Summit Enclosure Systems): certification ISO9001 is valid through 2026-10-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-011 (Summit Enclosure Systems): monthly_capacity_units=20500 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": false,
+              "reason": "SUP-011 (Summit Enclosure Systems): quality_history_score=84 fails requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": false,
+              "reason": "SUP-011 (Summit Enclosure Systems): moq_units=5200 fails requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": false,
+              "reason": "SUP-011 (Summit Enclosure Systems): lead_time_days=46 fails requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-011 (Summit Enclosure Systems): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": false,
+              "reason": "SUP-011 (Summit Enclosure Systems): sustainability_score=58 fails requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-012": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-012 (Baltic Advanced Plastics): certification ISO9001 is valid through 2027-11-01.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-012 (Baltic Advanced Plastics): monthly_capacity_units=20500 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": false,
+              "reason": "SUP-012 (Baltic Advanced Plastics): quality_history_score=83 fails requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-012 (Baltic Advanced Plastics): moq_units=4900 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-012 (Baltic Advanced Plastics): lead_time_days=44 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-012 (Baltic Advanced Plastics): region='Western Europe' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": true,
+              "reason": "SUP-012 (Baltic Advanced Plastics): sustainability_score=63 satisfies requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          },
+          "SUP-013": {
+            "certification": {
+              "passed": true,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): certification ISO9001 is valid through 2027-01-15.",
+              "constraint_type": "hard"
+            },
+            "monthly_capacity_units": {
+              "passed": true,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): monthly_capacity_units=22000 satisfies requirement (>= 20000).",
+              "constraint_type": "hard"
+            },
+            "quality_history_score": {
+              "passed": true,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): quality_history_score=90 satisfies requirement (>= 85).",
+              "constraint_type": "hard"
+            },
+            "moq_units": {
+              "passed": true,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): moq_units=4600 satisfies requirement (<= 5000).",
+              "constraint_type": "soft"
+            },
+            "lead_time_days": {
+              "passed": true,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): lead_time_days=39 satisfies requirement (<= 45).",
+              "constraint_type": "soft"
+            },
+            "region": {
+              "passed": true,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+              "constraint_type": "soft"
+            },
+            "sustainability_score": {
+              "passed": false,
+              "reason": "SUP-013 (Cascade Manufacturing Inc.): sustainability_score=59 fails requirement (>= 60).",
+              "constraint_type": "soft"
+            }
+          }
+        },
+        "eligible": [],
+        "sensitivity": {
+          "moq_units": {
+            "field": "moq_units",
+            "current_value": 5000,
+            "hypothetical_value": 7000,
+            "newly_eligible_count": 1,
+            "newly_eligible": [
+              "SUP-002"
+            ]
+          },
+          "lead_time_days": {
+            "field": "lead_time_days",
+            "current_value": 45,
+            "hypothetical_value": 60,
+            "newly_eligible_count": 1,
+            "newly_eligible": [
+              "SUP-003"
+            ]
+          },
+          "region": {
+            "field": "region",
+            "current_value": [
+              "North America",
+              "Western Europe",
+              "Southeast Asia"
+            ],
+            "hypothetical_value": [
+              "North America",
+              "Western Europe",
+              "Southeast Asia",
+              "South America"
+            ],
+            "newly_eligible_count": 1,
+            "newly_eligible": [
+              "SUP-004"
+            ]
+          },
+          "sustainability_score": {
+            "field": "sustainability_score",
+            "current_value": 60,
+            "hypothetical_value": 50,
+            "newly_eligible_count": 2,
+            "newly_eligible": [
+              "SUP-001",
+              "SUP-013"
+            ]
+          }
+        }
+      }
+    },
+    "elapsed_ms": 24.12
+  },
+  "step_B_agent_run": {
+    "request": {
+      "method": "POST",
+      "path": "/api/analyze",
+      "body": {
+        "max_iterations": 5,
+        "reference_date": "2026-08-08"
+      }
+    },
+    "response": {
+      "status_code": 200,
+      "body": {
+        "suppliers": [
+          {
+            "source_id": "SUP-001",
+            "source_row": 1,
+            "supplier_name": "Zenith Molding Co.",
+            "region": "North America",
+            "country": "United States",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2023-02-10",
+              "expiry_date": "2027-03-01"
+            },
+            "moq_units": 3000,
+            "lead_time_days": 40,
+            "monthly_capacity_units": 25000,
+            "quality_history_score": 90,
+            "sustainability_score": 55,
+            "data_flags": [],
+            "notes": "Clean record on every field except sustainability, which sits just under the 60 threshold."
+          },
+          {
+            "source_id": "SUP-002",
+            "source_row": 2,
+            "supplier_name": "Nordic Precision Plastics",
+            "region": "Western Europe",
+            "country": "Sweden",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2022-06-01",
+              "expiry_date": "2026-11-01"
+            },
+            "moq_units": 6000,
+            "lead_time_days": 35,
+            "monthly_capacity_units": 30000,
+            "quality_history_score": 88,
+            "sustainability_score": 70,
+            "data_flags": [],
+            "notes": "Strong on quality/capacity/sustainability but MOQ exceeds the 5,000-unit ceiling."
+          },
+          {
+            "source_id": "SUP-003",
+            "source_row": 3,
+            "supplier_name": "Pacific Rim Enclosures",
+            "region": "Southeast Asia",
+            "country": "Vietnam",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2021-09-15",
+              "expiry_date": "2027-09-15"
+            },
+            "moq_units": 4500,
+            "lead_time_days": 55,
+            "monthly_capacity_units": 22000,
+            "quality_history_score": 86,
+            "sustainability_score": 65,
+            "data_flags": [],
+            "notes": "Only fails on lead time (55 days vs 45-day target)."
+          },
+          {
+            "source_id": "SUP-004",
+            "source_row": 4,
+            "supplier_name": "Andes Manufacturing SA",
+            "region": "South America",
+            "country": "Brazil",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2022-01-20",
+              "expiry_date": "2028-01-20"
+            },
+            "moq_units": 4000,
+            "lead_time_days": 30,
+            "monthly_capacity_units": 28000,
+            "quality_history_score": 92,
+            "sustainability_score": 75,
+            "data_flags": [],
+            "notes": "Best all-around numbers in the pack, but South America is outside the acceptable region list."
+          },
+          {
+            "source_id": "SUP-005",
+            "source_row": 5,
+            "supplier_name": "Highland Injection Works",
+            "region": "North America",
+            "country": "Canada",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2023-05-01",
+              "expiry_date": "2027-05-01"
+            },
+            "moq_units": 4800,
+            "lead_time_days": 42,
+            "monthly_capacity_units": 18000,
+            "quality_history_score": 89,
+            "sustainability_score": 68,
+            "data_flags": [],
+            "notes": "Only fails the hard capacity gate (18,000 vs required 20,000 units/month)."
+          },
+          {
+            "source_id": "SUP-006",
+            "source_row": 6,
+            "supplier_name": "Delta Plastics Group",
+            "region": "Western Europe",
+            "country": "Germany",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2020-03-11",
+              "expiry_date": "2028-03-11"
+            },
+            "moq_units": 3500,
+            "lead_time_days": 38,
+            "monthly_capacity_units": 24000,
+            "quality_history_score": 80,
+            "sustainability_score": 72,
+            "data_flags": [],
+            "notes": "Only fails the hard quality history gate (80 vs required 85)."
+          },
+          {
+            "source_id": "SUP-007",
+            "source_row": 7,
+            "supplier_name": "Redwood Components",
+            "region": "North America",
+            "country": "United States",
+            "certification": {
+              "type": "ISO9001",
+              "status": "expired",
+              "issued_date": "2019-04-01",
+              "expiry_date": "2024-05-01"
+            },
+            "moq_units": 4000,
+            "lead_time_days": 40,
+            "monthly_capacity_units": 26000,
+            "quality_history_score": 91,
+            "sustainability_score": 80,
+            "data_flags": [],
+            "notes": "Otherwise excellent, but certification lapsed over a year ago and has not been renewed."
+          },
+          {
+            "source_id": "SUP-008",
+            "source_row": 8,
+            "supplier_name": "Meridian Tooling Ltd.",
+            "region": "Southeast Asia",
+            "country": "Malaysia",
+            "certification": {
+              "type": "IATF16949",
+              "status": "expired",
+              "issued_date": "2022-01-01",
+              "expiry_date": "2027-01-01"
+            },
+            "moq_units": 4200,
+            "lead_time_days": 44,
+            "monthly_capacity_units": 21000,
+            "capacity_notes": "Per Q2 internal audit, sustained output over the trailing 6 months was closer to 15,000 units/month; nameplate/quoted capacity of 21,000 units/month has not been demonstrated.",
+            "quality_history_score": 87,
+            "sustainability_score": 62,
+            "data_flags": [
+              "certification_status_conflict",
+              "capacity_figures_conflict"
+            ],
+            "notes": "AMBIGUOUS RECORD: certification status field says 'expired' while the listed expiry_date (2027-01-01) is still in the future -- source data conflicts and needs verification with the supplier before this record can be trusted. Separately, quoted monthly_capacity_units conflicts with the audited sustained-capacity figure in capacity_notes."
+          },
+          {
+            "source_id": "SUP-009",
+            "source_row": 9,
+            "supplier_name": "Coastal Precision Manufacturing",
+            "region": "Southeast Asia",
+            "country": "Thailand",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2021-07-01",
+              "expiry_date": "2027-07-01"
+            },
+            "moq_units": 3800,
+            "lead_time_days": 41,
+            "monthly_capacity_units": 23000,
+            "quality_history_score": 88,
+            "data_flags": [
+              "missing_field:sustainability_score"
+            ],
+            "notes": "MISSING DATA: sustainability_score was never returned in the supplier's questionnaire response; field is absent rather than zero, and should not be treated as a pass or a fail without follow-up."
+          },
+          {
+            "source_id": "SUP-010",
+            "source_row": 10,
+            "supplier_name": "Iron Gate Fabrication",
+            "region": "Eastern Europe",
+            "country": "Poland",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2020-08-01",
+              "expiry_date": "2028-08-01"
+            },
+            "moq_units": 7000,
+            "lead_time_days": 50,
+            "monthly_capacity_units": 19000,
+            "quality_history_score": 78,
+            "sustainability_score": 40,
+            "data_flags": [],
+            "notes": "Weak baseline supplier: fails region, MOQ, lead time, capacity, quality, and sustainability. Included for contrast, not a realistic shortlist candidate."
+          },
+          {
+            "source_id": "SUP-011",
+            "source_row": 11,
+            "supplier_name": "Summit Enclosure Systems",
+            "region": "North America",
+            "country": "Mexico",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2022-10-01",
+              "expiry_date": "2026-10-01"
+            },
+            "moq_units": 5200,
+            "lead_time_days": 46,
+            "monthly_capacity_units": 20500,
+            "quality_history_score": 84,
+            "sustainability_score": 58,
+            "data_flags": [],
+            "notes": "Near-miss on almost every soft field (MOQ, lead time, sustainability all just outside target) plus a hard fail on quality history (84 vs 85)."
+          },
+          {
+            "source_id": "SUP-012",
+            "source_row": 12,
+            "supplier_name": "Baltic Advanced Plastics",
+            "region": "Western Europe",
+            "country": "Poland",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2021-11-01",
+              "expiry_date": "2027-11-01"
+            },
+            "moq_units": 4900,
+            "lead_time_days": 44,
+            "monthly_capacity_units": 20500,
+            "quality_history_score": 83,
+            "sustainability_score": 63,
+            "data_flags": [],
+            "notes": "Passes every soft requirement and the capacity/certification hard gates, but quality history (83) falls just short of the 85 hard minimum -- the closest overall miss in the pack."
+          },
+          {
+            "source_id": "SUP-013",
+            "source_row": 13,
+            "supplier_name": "Cascade Manufacturing Inc.",
+            "region": "North America",
+            "country": "United States",
+            "certification": {
+              "type": "ISO9001",
+              "status": "valid",
+              "issued_date": "2023-01-15",
+              "expiry_date": "2027-01-15"
+            },
+            "moq_units": 4600,
+            "lead_time_days": 39,
+            "monthly_capacity_units": 22000,
+            "quality_history_score": 90,
+            "sustainability_score": 59,
+            "data_flags": [],
+            "notes": "Only fails sustainability, and only by one point (59 vs 60 minimum) -- a strong negotiation/waiver candidate."
+          }
+        ],
+        "original_constraints": [
+          {
+            "field": "certification",
+            "label": "Quality Management Certification",
+            "requirement": "Must hold a currently valid ISO9001 or IATF16949 certificate (not expired, not suspended).",
+            "constraint_type": "hard",
+            "rationale": "Non-negotiable quality-system gate required by the end customer's automotive-adjacent supply chain policy."
+          },
+          {
+            "field": "monthly_capacity_units",
+            "label": "Minimum Monthly Production Capacity",
+            "requirement": "Must be able to sustain at least 20,000 units/month.",
+            "operator": ">=",
+            "value": 20000,
+            "constraint_type": "hard",
+            "rationale": "Below this threshold the supplier cannot cover ramp-up volume without a second source; treated as a capability gate, not a negotiating point."
+          },
+          {
+            "field": "quality_history_score",
+            "label": "Minimum Quality History Score",
+            "requirement": "Must have a quality history score of at least 85 (out of 100, based on defect rate / audit history / on-time delivery of prior lots).",
+            "operator": ">=",
+            "value": 85,
+            "constraint_type": "hard",
+            "rationale": "Track record below this score has historically correlated with field failures for enclosure parts; not commercially negotiable."
+          },
+          {
+            "field": "moq_units",
+            "label": "Maximum Minimum Order Quantity",
+            "requirement": "MOQ should be no more than 5,000 units.",
+            "operator": "<=",
+            "value": 5000,
+            "constraint_type": "soft",
+            "rationale": "Preferred ceiling for initial pilot batches; suppliers above this can often be negotiated down or split across a phased PO."
+          },
+          {
+            "field": "lead_time_days",
+            "label": "Maximum Lead Time",
+            "requirement": "Lead time should be no more than 45 days.",
+            "operator": "<=",
+            "value": 45,
+            "constraint_type": "soft",
+            "rationale": "Desired for launch schedule but expeditable freight or partial shipments can often close a small gap."
+          },
+          {
+            "field": "region",
+            "label": "Acceptable Manufacturing Regions",
+            "requirement": "Must manufacture in one of: North America, Western Europe, Southeast Asia.",
+            "acceptable_values": [
+              "North America",
+              "Western Europe",
+              "Southeast Asia"
+            ],
+            "constraint_type": "soft",
+            "rationale": "Preferred for tariff exposure and logistics; a strong supplier outside these regions could still be considered with a landed-cost review."
+          },
+          {
+            "field": "sustainability_score",
+            "label": "Minimum Sustainability Score",
+            "requirement": "Sustainability score should be at least 60 (out of 100, based on emissions reporting, energy sourcing, waste handling).",
+            "operator": ">=",
+            "value": 60,
+            "constraint_type": "soft",
+            "rationale": "Aligns with buyer ESG goals; can be waived for an otherwise strong supplier pending a corrective action plan."
+          }
+        ],
+        "working_constraints": [
+          {
+            "field": "certification",
+            "label": "Quality Management Certification",
+            "requirement": "Must hold a currently valid ISO9001 or IATF16949 certificate (not expired, not suspended).",
+            "constraint_type": "hard",
+            "rationale": "Non-negotiable quality-system gate required by the end customer's automotive-adjacent supply chain policy."
+          },
+          {
+            "field": "monthly_capacity_units",
+            "label": "Minimum Monthly Production Capacity",
+            "requirement": "Must be able to sustain at least 20,000 units/month.",
+            "operator": ">=",
+            "value": 20000,
+            "constraint_type": "hard",
+            "rationale": "Below this threshold the supplier cannot cover ramp-up volume without a second source; treated as a capability gate, not a negotiating point."
+          },
+          {
+            "field": "quality_history_score",
+            "label": "Minimum Quality History Score",
+            "requirement": "Must have a quality history score of at least 85 (out of 100, based on defect rate / audit history / on-time delivery of prior lots).",
+            "operator": ">=",
+            "value": 85,
+            "constraint_type": "hard",
+            "rationale": "Track record below this score has historically correlated with field failures for enclosure parts; not commercially negotiable."
+          },
+          {
+            "field": "moq_units",
+            "label": "Maximum Minimum Order Quantity",
+            "requirement": "MOQ should be no more than 5,000 units.",
+            "operator": "<=",
+            "value": 5000,
+            "constraint_type": "soft",
+            "rationale": "Preferred ceiling for initial pilot batches; suppliers above this can often be negotiated down or split across a phased PO."
+          },
+          {
+            "field": "lead_time_days",
+            "label": "Maximum Lead Time",
+            "requirement": "Lead time should be no more than 45 days.",
+            "operator": "<=",
+            "value": 45,
+            "constraint_type": "soft",
+            "rationale": "Desired for launch schedule but expeditable freight or partial shipments can often close a small gap."
+          },
+          {
+            "field": "region",
+            "label": "Acceptable Manufacturing Regions",
+            "requirement": "Must manufacture in one of: North America, Western Europe, Southeast Asia.",
+            "acceptable_values": [
+              "North America",
+              "Western Europe",
+              "Southeast Asia"
+            ],
+            "constraint_type": "soft",
+            "rationale": "Preferred for tariff exposure and logistics; a strong supplier outside these regions could still be considered with a landed-cost review."
+          },
+          {
+            "field": "sustainability_score",
+            "label": "Minimum Sustainability Score",
+            "requirement": "Sustainability score should be at least 60 (out of 100, based on emissions reporting, energy sourcing, waste handling).",
+            "operator": ">=",
+            "value": 50,
+            "constraint_type": "soft",
+            "rationale": "Aligns with buyer ESG goals; can be waived for an otherwise strong supplier pending a corrective action plan."
+          }
+        ],
+        "filter_result": {
+          "results": {
+            "SUP-001": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): certification ISO9001 is valid through 2027-03-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): monthly_capacity_units=25000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): quality_history_score=90 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): moq_units=3000 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): lead_time_days=40 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-001 (Zenith Molding Co.): sustainability_score=55 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-002": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-002 (Nordic Precision Plastics): certification ISO9001 is valid through 2026-11-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-002 (Nordic Precision Plastics): monthly_capacity_units=30000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-002 (Nordic Precision Plastics): quality_history_score=88 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": false,
+                "reason": "SUP-002 (Nordic Precision Plastics): moq_units=6000 fails requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-002 (Nordic Precision Plastics): lead_time_days=35 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-002 (Nordic Precision Plastics): region='Western Europe' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-002 (Nordic Precision Plastics): sustainability_score=70 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-003": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-003 (Pacific Rim Enclosures): certification ISO9001 is valid through 2027-09-15.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-003 (Pacific Rim Enclosures): monthly_capacity_units=22000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-003 (Pacific Rim Enclosures): quality_history_score=86 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-003 (Pacific Rim Enclosures): moq_units=4500 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": false,
+                "reason": "SUP-003 (Pacific Rim Enclosures): lead_time_days=55 fails requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-003 (Pacific Rim Enclosures): region='Southeast Asia' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-003 (Pacific Rim Enclosures): sustainability_score=65 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-004": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-004 (Andes Manufacturing SA): certification ISO9001 is valid through 2028-01-20.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-004 (Andes Manufacturing SA): monthly_capacity_units=28000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-004 (Andes Manufacturing SA): quality_history_score=92 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-004 (Andes Manufacturing SA): moq_units=4000 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-004 (Andes Manufacturing SA): lead_time_days=30 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": false,
+                "reason": "SUP-004 (Andes Manufacturing SA): region='South America' is NOT in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-004 (Andes Manufacturing SA): sustainability_score=75 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-005": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-005 (Highland Injection Works): certification ISO9001 is valid through 2027-05-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": false,
+                "reason": "SUP-005 (Highland Injection Works): monthly_capacity_units=18000 fails requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-005 (Highland Injection Works): quality_history_score=89 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-005 (Highland Injection Works): moq_units=4800 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-005 (Highland Injection Works): lead_time_days=42 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-005 (Highland Injection Works): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-005 (Highland Injection Works): sustainability_score=68 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-006": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-006 (Delta Plastics Group): certification ISO9001 is valid through 2028-03-11.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-006 (Delta Plastics Group): monthly_capacity_units=24000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": false,
+                "reason": "SUP-006 (Delta Plastics Group): quality_history_score=80 fails requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-006 (Delta Plastics Group): moq_units=3500 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-006 (Delta Plastics Group): lead_time_days=38 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-006 (Delta Plastics Group): region='Western Europe' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-006 (Delta Plastics Group): sustainability_score=72 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-007": {
+              "certification": {
+                "passed": false,
+                "reason": "SUP-007 (Redwood Components): certification status is 'expired' (expiry_date 2024-05-01), not valid.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-007 (Redwood Components): monthly_capacity_units=26000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-007 (Redwood Components): quality_history_score=91 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-007 (Redwood Components): moq_units=4000 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-007 (Redwood Components): lead_time_days=40 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-007 (Redwood Components): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-007 (Redwood Components): sustainability_score=80 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-008": {
+              "certification": {
+                "passed": false,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): AMBIGUOUS certification record -- status field says 'expired' but expiry_date 2027-01-01 is still in the future as of 2026-08-08. Conflicting source data; does not count as a valid certification until verified.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): monthly_capacity_units=21000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): quality_history_score=87 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): moq_units=4200 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): lead_time_days=44 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): region='Southeast Asia' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-008 (Meridian Tooling Ltd.): sustainability_score=62 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-009": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): certification ISO9001 is valid through 2027-07-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): monthly_capacity_units=23000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): quality_history_score=88 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): moq_units=3800 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): lead_time_days=41 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): region='Southeast Asia' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": false,
+                "reason": "SUP-009 (Coastal Precision Manufacturing): field 'sustainability_score' is missing from this supplier record; cannot verify against the requirement.",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-010": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-010 (Iron Gate Fabrication): certification ISO9001 is valid through 2028-08-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": false,
+                "reason": "SUP-010 (Iron Gate Fabrication): monthly_capacity_units=19000 fails requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": false,
+                "reason": "SUP-010 (Iron Gate Fabrication): quality_history_score=78 fails requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": false,
+                "reason": "SUP-010 (Iron Gate Fabrication): moq_units=7000 fails requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": false,
+                "reason": "SUP-010 (Iron Gate Fabrication): lead_time_days=50 fails requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": false,
+                "reason": "SUP-010 (Iron Gate Fabrication): region='Eastern Europe' is NOT in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": false,
+                "reason": "SUP-010 (Iron Gate Fabrication): sustainability_score=40 fails requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-011": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-011 (Summit Enclosure Systems): certification ISO9001 is valid through 2026-10-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-011 (Summit Enclosure Systems): monthly_capacity_units=20500 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": false,
+                "reason": "SUP-011 (Summit Enclosure Systems): quality_history_score=84 fails requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": false,
+                "reason": "SUP-011 (Summit Enclosure Systems): moq_units=5200 fails requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": false,
+                "reason": "SUP-011 (Summit Enclosure Systems): lead_time_days=46 fails requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-011 (Summit Enclosure Systems): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-011 (Summit Enclosure Systems): sustainability_score=58 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-012": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-012 (Baltic Advanced Plastics): certification ISO9001 is valid through 2027-11-01.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-012 (Baltic Advanced Plastics): monthly_capacity_units=20500 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": false,
+                "reason": "SUP-012 (Baltic Advanced Plastics): quality_history_score=83 fails requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-012 (Baltic Advanced Plastics): moq_units=4900 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-012 (Baltic Advanced Plastics): lead_time_days=44 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-012 (Baltic Advanced Plastics): region='Western Europe' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-012 (Baltic Advanced Plastics): sustainability_score=63 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            },
+            "SUP-013": {
+              "certification": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): certification ISO9001 is valid through 2027-01-15.",
+                "constraint_type": "hard"
+              },
+              "monthly_capacity_units": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): monthly_capacity_units=22000 satisfies requirement (>= 20000).",
+                "constraint_type": "hard"
+              },
+              "quality_history_score": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): quality_history_score=90 satisfies requirement (>= 85).",
+                "constraint_type": "hard"
+              },
+              "moq_units": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): moq_units=4600 satisfies requirement (<= 5000).",
+                "constraint_type": "soft"
+              },
+              "lead_time_days": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): lead_time_days=39 satisfies requirement (<= 45).",
+                "constraint_type": "soft"
+              },
+              "region": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): region='North America' is in the acceptable set ['North America', 'Western Europe', 'Southeast Asia'].",
+                "constraint_type": "soft"
+              },
+              "sustainability_score": {
+                "passed": true,
+                "reason": "SUP-013 (Cascade Manufacturing Inc.): sustainability_score=59 satisfies requirement (>= 50).",
+                "constraint_type": "soft"
+              }
+            }
+          },
+          "eligible": [
+            "SUP-001",
+            "SUP-013"
+          ]
+        },
+        "relaxation_ledger": [
+          {
+            "iteration": 1,
+            "field": "sustainability_score",
+            "old_value": 60,
+            "new_value": 50,
+            "rationale": "sustainability_score has the most current soft-constraint failures (4 suppliers); SUP-001 (55) and SUP-013 (59) are both close misses with every other requirement already satisfied, so lowering the floor to 50 is the single change most likely to rescue an eligible supplier without touching any hard requirement.",
+            "accepted": true
+          }
+        ],
+        "visited_relaxations": [
+          {
+            "field": "sustainability_score",
+            "new_value": 50
+          }
+        ],
+        "iteration": 1,
+        "max_iterations": 5,
+        "status": "shortlisted",
+        "final_shortlist": [
+          {
+            "supplier_id": "SUP-013",
+            "explanation": "Passes every requirement after the sustainability_score relaxation (sustainability_score=59, the higher of the two eligible suppliers, vs. a 50 floor). certification is ISO9001/valid, monthly_capacity_units=22000 (>= 20000), quality_history_score=90 (>= 85), moq_units=4600 (<= 5000), lead_time_days=39 (<= 45), region='North America' is in the acceptable set."
+          },
+          {
+            "supplier_id": "SUP-001",
+            "explanation": "Also passes every requirement after the relaxation: certification is ISO9001/valid, monthly_capacity_units=25000 (>= 20000, the higher of the two eligible suppliers), quality_history_score=90 (>= 85), moq_units=3000 (<= 5000), lead_time_days=40 (<= 45), region='North America' is in the acceptable set, and sustainability_score=55 clears the relaxed 50 floor though not the original 60. Ranked second only because sustainability_score is lower than SUP-013's; capacity is higher, so treat these two as close on overall fit."
+          }
+        ],
+        "message": "Shortlisted 2 supplier(s) after 1 relaxation attempt.",
+        "pending_relaxation": null,
+        "reference_date": "2026-08-08"
+      }
+    },
+    "elapsed_ms": 27.27
+  }
+}

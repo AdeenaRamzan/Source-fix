@@ -39,29 +39,58 @@ Unlike conventional LLM wrappers that risk hallucinating non-existent certificat
 SourceFix uses a multi-stage **LangGraph agent architecture** with Server-Sent Events (SSE) streaming state changes live to a modern Next.js workspace.
 
 ```mermaid
-flowchart TD
-    A[📦 User Product Brief & Constraints] --> B[⚙️ Deterministic Baseline Filter]
-    B --> C{Qualified Suppliers Found?}
-    
-    C -- Yes --> G[🏆 Rank & Finalize Shortlist]
-    C -- No --> D[🧠 Groq Llama-3.3-70B Proposer Node]
-    
-    D --> E[🛡️ Deterministic Code Gate]
-    E -- Soft Constraint Valid --> F[✅ Apply Relaxation & Re-Filter]
-    E -- Hard Constraint Invalid --> D
-    
-    F --> C
-    
-    G --> H[📊 Stamped Ledger & Citable Shortlist]
+flowchart TB
+    subgraph IN ["📦 1. INPUT SPECIFICATIONS"]
+        direction TB
+        A["📄 Product Requirements (product_brief.json)"]
+        B[("🗄️ SQLite Database (suppliers.db)")]
+    end
 
-    style A fill:#eae1d1,stroke:#25364b,stroke-width:2px
-    style B fill:#315d9e,color:#fff,stroke:#25364b,stroke-width:2px
-    style C fill:#d77931,color:#fff,stroke:#25364b,stroke-width:2px
-    style D fill:#9d4b3d,color:#fff,stroke:#25364b,stroke-width:2px
-    style E fill:#315d9e,color:#fff,stroke:#25364b,stroke-width:2px
-    style F fill:#e3ebf7,stroke:#315d9e,stroke-width:2px
-    style G fill:#315d9e,color:#fff,stroke:#25364b,stroke-width:2px
-    style H fill:#eae1d1,stroke:#25364b,stroke-width:2px
+    subgraph ENGINE ["⚙️ 2. DETERMINISTIC ENGINE (Python Core)"]
+        direction TB
+        C["⚡ Eligibility Filter (Hard & Soft Constraints)"]
+        D{"🔍 Baseline Check: Qualified Suppliers Found?"}
+    end
+
+    subgraph LLM ["🧠 3. AI AGENT REASONING LOOP (LangGraph + Groq)"]
+        direction TB
+        E["🤖 Proposer Node (Groq Llama-3.3-70B)"]
+        F["🛡️ Deterministic Code Gate"]
+        G["🔄 Apply Soft Relaxation & Rescale Criteria"]
+    end
+
+    subgraph OUT ["🏆 4. DEFENSIBLE OUTPUT & LEDGER"]
+        direction TB
+        H["📊 Stamped Compromise Ledger"]
+        I["✨ Final Shortlist (100% Citation Grounding)"]
+    end
+
+    A --> C
+    B --> C
+    C --> D
+    
+    D -->|"✅ Yes (Eligible Found)"| H
+    D -->|"❌ No (0 Suppliers Pass)"| E
+    
+    E -->|"Proposes Loosening Criteria"| F
+    F -->|"❌ Rejects Hard Gate Violations"| E
+    F -->|"✅ Approves Soft Constraint Loosening"| G
+    
+    G -->|"Re-runs Filter with Relaxed Rules"| D
+    H --> I
+
+    %% Theme Styling
+    classDef inputStyle fill:#f8f3e9,stroke:#25364b,stroke-width:2px,color:#25364b,font-weight:bold;
+    classDef engineStyle fill:#e3ebf7,stroke:#315d9e,stroke-width:2px,color:#25364b,font-weight:bold;
+    classDef llmStyle fill:#f7e9db,stroke:#d77931,stroke-width:2px,color:#25364b,font-weight:bold;
+    classDef outputStyle fill:#25364b,stroke:#d77931,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef gateStyle fill:#9d4b3d,stroke:#25364b,stroke-width:2px,color:#ffffff,font-weight:bold;
+
+    class A,B inputStyle;
+    class C,D engineStyle;
+    class E,G llmStyle;
+    class F gateStyle;
+    class H,I outputStyle;
 ```
 
 ---

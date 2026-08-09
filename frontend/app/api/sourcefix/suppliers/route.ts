@@ -1,26 +1,33 @@
-const backendUrl = () =>
-  process.env.SOURCEFIX_BACKEND_URL ?? "http://localhost:8000";
+import { NextResponse } from "next/server";
+import { getStoreSuppliers, addStoreSupplier } from "../../../../lib/supplier-store";
 
 export async function GET() {
-  const response = await fetch(`${backendUrl()}/api/suppliers`, {
-    cache: "no-store",
-  });
-  return new Response(response.body, {
-    status: response.status,
-    headers: { "content-type": "application/json" },
-  });
+  if (process.env.SOURCEFIX_BACKEND_URL) {
+    const res = await fetch(`${process.env.SOURCEFIX_BACKEND_URL}/api/suppliers`, { cache: "no-store" });
+    return new Response(res.body, { status: res.status, headers: { "content-type": "application/json" } });
+  }
+
+  return NextResponse.json(getStoreSuppliers());
 }
 
 export async function POST(request: Request) {
-  const body = await request.text();
-  const response = await fetch(`${backendUrl()}/api/suppliers`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body,
-    cache: "no-store",
-  });
-  return new Response(response.body, {
-    status: response.status,
-    headers: { "content-type": "application/json" },
-  });
+  const text = await request.text();
+  const body = text ? JSON.parse(text) : {};
+
+  if (process.env.SOURCEFIX_BACKEND_URL) {
+    const res = await fetch(`${process.env.SOURCEFIX_BACKEND_URL}/api/suppliers`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
+    return new Response(res.body, { status: res.status, headers: { "content-type": "application/json" } });
+  }
+
+  try {
+    const created = addStoreSupplier(body);
+    return NextResponse.json(created, { status: 201 });
+  } catch (err: any) {
+    return NextResponse.json({ detail: err.message }, { status: err.message?.includes("already exists") ? 409 : 422 });
+  }
 }

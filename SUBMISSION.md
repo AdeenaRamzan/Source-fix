@@ -2,6 +2,10 @@
 
 *SourceFix Hackathon Track 1 — AI Manufacturing Decision Copilot*
 
+- 🌐 **Live Web Application**: [https://source-fix.vercel.app/](https://source-fix.vercel.app/)
+- 🎥 **YouTube Video Demo**: [https://youtu.be/kdCmKI3OVuc](https://youtu.be/kdCmKI3OVuc)
+- 📊 **Presentation Slide Deck**: [Google Slides Presentation](https://docs.google.com/presentation/d/1kDsACW6O3L37ypI7DrrTD72fo46XuLIM/edit?usp=sharing)
+
 ---
 
 ## 1. Intended user

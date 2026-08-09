@@ -12,8 +12,13 @@
   <a href="#-architecture-overview"><img src="https://img.shields.io/badge/Track-1_AI_Manufacturing_Copilot-315D9E?style=for-the-badge" alt="Track 1"></a>
   <a href="#-running-tests--verification"><img src="https://img.shields.io/badge/Pytest-25%2F25_Passed-22c55e?style=for-the-badge" alt="Pytest"></a>
   <a href="#-quickstart-guide"><img src="https://img.shields.io/badge/Model-Groq_Llama_3.3_70B-orange?style=for-the-badge" alt="Groq"></a>
-  <a href="#-quickstart-guide"><img src="https://img.shields.io/badge/Backend-FastAPI_%2B_SQLite-blue?style=for-the-badge" alt="FastAPI"></a>
-  <a href="#-quickstart-guide"><img src="https://img.shields.io/badge/Frontend-Next.js_15_%2B_Tailwind-black?style=for-the-badge" alt="Next.js"></a>
+  <a href="https://source-fix.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Vercel"></a>
+</p>
+
+<p align="center">
+  🚀 <strong><a href="https://source-fix.vercel.app/">Live Web App</a></strong> &nbsp;•&nbsp;
+  🎥 <strong><a href="https://youtu.be/kdCmKI3OVuc">YouTube Video Demo</a></strong> &nbsp;•&nbsp;
+  📊 <strong><a href="https://docs.google.com/presentation/d/1kDsACW6O3L37ypI7DrrTD72fo46XuLIM/edit?usp=sharing">Presentation Slide Deck</a></strong>
 </p>
 
 ---

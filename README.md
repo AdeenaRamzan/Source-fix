@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="#-architecture-overview"><img src="https://img.shields.io/badge/Track-1_AI_Manufacturing_Copilot-315D9E?style=for-the-badge" alt="Track 1"></a>
+  <a href="#-architecture-overview"><img src="https://img.shields.io/badge/Platform-AI_Manufacturing_Copilot-315D9E?style=for-the-badge" alt="Platform"></a>
   <a href="#-running-tests--verification"><img src="https://img.shields.io/badge/Pytest-25%2F25_Passed-22c55e?style=for-the-badge" alt="Pytest"></a>
   <a href="#-quickstart-guide"><img src="https://img.shields.io/badge/Model-Groq_Llama_3.3_70B-orange?style=for-the-badge" alt="Groq"></a>
   <a href="https://source-fix.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Vercel"></a>
@@ -202,7 +202,7 @@ python demo_cases/verify_citations.py
 ```
 Source-fix/
 ├── README.md               # Visual quickstart & system architecture guide
-├── SUBMISSION.md           # Track 1 challenge brief deliverable & rubric mapping
+├── SUBMISSION.md           # System architecture, evaluation analysis, & data dictionary
 ├── docs/                   # Documentation graphics & banner assets
 ├── backend/
 │   ├── app/
@@ -225,6 +225,7 @@ Source-fix/
 
 ---
 
-## 📄 License & Hackathon Submission
+## 📄 License & System Specifications
 
-Submitted for **AI Manufacturing Decision Copilot (Track 1)**. Built with paper/ink design aesthetics, deterministic code guardrails, and persistent SQLite storage.
+Built with paper/ink design aesthetics, deterministic code guardrails, and persistent SQLite storage.
+

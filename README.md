@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/banner.jpg" alt="SourceFix — AI Manufacturing Decision Copilot" width="100%" />
+  <img src="docs/banner.jpg" alt="SourceFix | AI Manufacturing Decision Copilot" width="100%" />
 </p>
 
-<h1 align="center">SourceFix — AI Manufacturing Decision Copilot</h1>
+<h1 align="center">SourceFix | AI Manufacturing Decision Copilot</h1>
 
 <p align="center">
   <strong>Turn complex procurement briefs into defensible, citable supplier shortlists with zero hallucinated trade-offs.</strong>

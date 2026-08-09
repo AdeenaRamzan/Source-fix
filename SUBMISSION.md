@@ -1,6 +1,6 @@
-# SourceFix — System Architecture & Deliverables
+# SourceFix | System Architecture & Deliverables
 
-*SourceFix — AI Manufacturing Decision Copilot*
+*SourceFix | AI Manufacturing Decision Copilot*
 
 - 🌐 **Live Web Application**: [https://source-fix.vercel.app/](https://source-fix.vercel.app/)
 - 🎥 **YouTube Video Demo**: [https://youtu.be/kdCmKI3OVuc](https://youtu.be/kdCmKI3OVuc)

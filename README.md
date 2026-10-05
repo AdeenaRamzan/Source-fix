@@ -5,13 +5,13 @@
 <h1 align="center">SourceFix | AI Manufacturing Decision Copilot</h1>
 
 <p align="center">
-  <strong>Turn complex procurement briefs into defensible, citable supplier shortlists with zero hallucinated trade-offs.</strong>
+  <strong>Turn complex procurement briefs into defensible, citable supplier shortlists with verifiable, data-grounded trade-offs.</strong>
 </p>
 
 <p align="center">
   <a href="#-architecture-overview"><img src="https://img.shields.io/badge/Platform-AI_Manufacturing_Copilot-315D9E?style=for-the-badge" alt="Platform"></a>
   <a href="#-running-tests--verification"><img src="https://img.shields.io/badge/Pytest-25%2F25_Passed-22c55e?style=for-the-badge" alt="Pytest"></a>
-  <a href="#-quickstart-guide"><img src="https://img.shields.io/badge/Model-Groq_Llama_3.3_70B-orange?style=for-the-badge" alt="Groq"></a>
+  <a href="#-quickstart-guide"><img src="https://img.shields.io/badge/Model-Groq_GPT--OSS--120B%20%7C%20Llama--3.3-orange?style=for-the-badge" alt="Groq"></a>
   <a href="https://source-fix.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Vercel"></a>
 </p>
 
@@ -25,10 +25,10 @@
 
 ## ⚡ Executive Summary
 
-**SourceFix** is an enterprise-grade procurement decision copilot designed for manufacturing leads evaluating custom hardware requirements (`product_brief.json`) against supplier data (`suppliers.db`). 
+**SourceFix** is an AI procurement decision copilot designed for manufacturing leads evaluating custom hardware requirements (`product_brief.json`) against supplier data (`suppliers.db`). 
 
-Unlike conventional LLM wrappers that risk hallucinating non-existent certifications or ignoring hard engineering constraints, SourceFix implements **strict code guardrails around LLM reasoning**:
-- **Zero LLM Hallucinations on Constraints**: Hard requirements (e.g., minimum capacity, quality score threshold, certification validity) are evaluated exclusively by pure, deterministic Python code.
+Unlike unconstrained LLM workflows that can hallucinate specifications or disregard engineering constraints, SourceFix implements **strict code guardrails around LLM reasoning**:
+- **Deterministic Constraint Enforcement**: Hard requirements (e.g., minimum capacity, quality score threshold, certification validity) are evaluated exclusively by pure, deterministic Python code.
 - **Code Gate Enforcement**: Every soft-constraint relaxation proposed by the LLM is intercepted and validated against immutable business rules in code. If an LLM attempts to relax a hard gate, the code gate rejects it.
 - **100% Citation Grounding**: Every numeric claim and supplier attribute in the final shortlist links directly back to exact source rows in the dataset.
 
@@ -192,35 +192,50 @@ SourceFix includes a dedicated **Supplier Admin Dashboard** accessible at:
 
 ### 1. Deploying Frontend to Vercel
 1. Import your GitHub repository (`https://github.com/AdeenaRamzan/Source-fix`) into [Vercel](https://vercel.com).
-2. Vercel automatically detects `vercel.json` with Next.js configuration.
-3. Add Environment Variable:
-   - `SOURCEFIX_BACKEND_URL`: URL of your deployed FastAPI backend (e.g. `https://sourcefix-backend.onrender.com`).
+2. Vercel automatically detects Next.js configuration.
+3. Configure Environment Variables in Project Settings:
+   - `GROQ_API_KEY` *(Required)*: Your Groq API key for serverless TypeScript engine LLM calls.
+   - `GROQ_MODEL` *(Optional, default: `openai/gpt-oss-120b`)*: Chat completion model on your Groq key.
+   - `SOURCEFIX_BACKEND_URL` *(Optional)*: URL of a deployed FastAPI backend (e.g. `https://sourcefix-backend.onrender.com`). When omitted, Vercel runs the built-in Next.js TypeScript engine (`lib/agent-core.ts`).
 4. Click **Deploy**.
 
 ### 2. Deploying FastAPI + SQLite Backend (Render / Railway / Fly.io)
 Deploy the `backend/` directory to any Python service host (Render, Railway, Fly.io):
 - **Build Command**: `pip install -r requirements.txt`
 - **Start Command**: `python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- **Environment Variables**: `GROQ_API_KEY=gsk_your_groq_api_key`
+- **Environment Variables**:
+  - `GROQ_API_KEY`: Groq API key.
+  - `GROQ_MODEL` *(Optional, default: `openai/gpt-oss-120b`)*: Model name for LLM calls.
+  - `GROQ_PROPOSE_MODEL` *(Optional, default: `openai/gpt-oss-20b`)*.
+  - `GROQ_FINALIZE_MODEL` *(Optional, default: `openai/gpt-oss-120b`)*.
 
 ---
 
 ## 🧪 Running Tests & Verification
 
-### Run Pytest Suite (25 Tests)
-From `backend/`:
+### Pytest Test Suite (25 Tests)
+The backend test suite contains **25 deterministic unit and regression tests**:
+- **`backend/tests/test_tools.py` (15 tests)**: Verifies deterministic constraint checks, expired/ambiguous certificate fail-closed handling, full-pack baseline filter, failure counting, exact citation lookup (`cite_lookup`), and sensitivity reports.
+- **`backend/tests/test_agent.py` (6 tests)**: Verifies negotiation loop transitions, max-iteration termination, and code gate enforcement:
+  - **Adversarial Hard-Constraint Test (`test_hard_constraint_is_never_relaxed_under_repeated_pressure`)**: Injects an adversarial LLM proposing relaxations to hard constraints (`certification`, `monthly_capacity_units`, `quality_history_score`) across multiple iterations with zero/permissive thresholds. Verifies that `apply_relaxation_node` rejects all proposals, logs rejections in the ledger, keeps `working_constraints` identical to `original_constraints`, and exits with `status='no_shortlist_found'`.
+- **`backend/tests/test_suppliers_crud.py` (4 tests)**: Verifies SQLite persistence, list/get/create/update/delete lifecycle, and 404/409 handling.
+
+Run tests from `backend/`:
 ```bash
 cd backend
 python -m pytest tests/ -v
 ```
 
-### Re-generate Demo Cases & Citation Verification Audit
+### TypeScript Gatekeeper Tests
+Verify that the TypeScript serverless engine enforces the identical code gate:
+```bash
+cd frontend
+npx tsx tests/agent-core.test.ts
+```
+
+### Citation Verification Audit
 From the project root (`Source-fix/`):
 ```bash
-# Generate the 3 submission demo cases
-python demo_cases/generate_demo_cases.py
-
-# Run citation audit (100% citation coverage, 0% unsupported claims)
 python demo_cases/verify_citations.py
 ```
 

@@ -28,23 +28,47 @@ export type BaselineResponse = {
   sensitivity?: Record<string, SensitivityItem>;
 };
 
+export type DecisionSource = "llm" | "deterministic_fallback";
+
+export const FALLBACK_LABEL = "deterministic fallback, no LLM";
+
 export type ShortlistItem = {
   supplier_id: string;
-  explanation: string;
+  // null when the Python backend's ranking LLM reply could not be parsed
+  explanation: string | null;
+  explanation_source?: DecisionSource;
 };
+
+export type RelaxationValue = number | string | string[] | null | undefined;
 
 export type Relaxation = {
   iteration: number;
-  field: string;
-  old_value: number | string;
-  new_value: number | string;
-  rationale: string;
+  field?: string;
+  old_value?: RelaxationValue;
+  new_value?: RelaxationValue;
+  rationale?: string;
   accepted: boolean;
+  // rejected entries: Python emits reason + raw proposal; TS emits reason
+  reason?: string;
+  proposal?: { field?: string; new_value?: RelaxationValue; _parse_failed?: boolean } | null;
+  // TS engine only: whether the proposal came from the LLM or the deterministic fallback
+  source?: DecisionSource;
+  fallback_reason?: string;
+};
+
+export type LlmCallRecord = {
+  step: string;
+  iteration: number;
+  model: string;
+  ok: boolean;
+  status?: number;
+  duration_ms: number;
+  error?: string;
 };
 
 export type AnalyzeResponse = {
   relaxation_ledger: Relaxation[];
-  visited_relaxations?: { field: string; new_value: number | string }[];
+  visited_relaxations?: { field: string; new_value: RelaxationValue }[];
   iteration: number;
   max_iterations: number;
   status: string;
@@ -52,6 +76,9 @@ export type AnalyzeResponse = {
   message: string;
   pending_relaxation?: unknown;
   reference_date?: string;
+  llm_calls?: LlmCallRecord[];
+  ranking_source?: DecisionSource;
+  ranking_fallback_reason?: string;
 };
 
 export const product = {

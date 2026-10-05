@@ -44,15 +44,13 @@ export function normalizeSupplier(s: Supplier): Supplier {
   n.source_id = n.supplier_id;
   n.name = n.name || n.supplier_name || `Supplier ${n.supplier_id}`;
   n.supplier_name = n.name;
-  n.moq = n.moq ?? n.moq_units ?? 5000;
-  n.moq_units = n.moq;
-  n.lead_time_days = n.lead_time_days ?? 45;
-  n.location_region = n.location_region || n.region || "North America";
-  n.region = n.location_region;
-  n.capacity_units_month = n.capacity_units_month ?? n.monthly_capacity_units ?? 20000;
-  n.monthly_capacity_units = n.capacity_units_month;
-  n.quality_history_score = n.quality_history_score ?? 85;
-  n.sustainability_score = n.sustainability_score ?? 60;
+
+  if (n.moq === undefined && n.moq_units !== undefined) n.moq = n.moq_units;
+  if (n.moq_units === undefined && n.moq !== undefined) n.moq_units = n.moq;
+  if (n.location_region === undefined && n.region !== undefined) n.location_region = n.region;
+  if (n.region === undefined && n.location_region !== undefined) n.region = n.location_region;
+  if (n.capacity_units_month === undefined && n.monthly_capacity_units !== undefined) n.capacity_units_month = n.monthly_capacity_units;
+  if (n.monthly_capacity_units === undefined && n.capacity_units_month !== undefined) n.monthly_capacity_units = n.capacity_units_month;
 
   if (!n.certification && n.certifications && Array.isArray(n.certifications) && n.certifications.length > 0) {
     const first = n.certifications[0];

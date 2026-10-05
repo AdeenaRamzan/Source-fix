@@ -31,7 +31,9 @@ from __future__ import annotations
 
 import copy
 import json
+import logging
 import os
+import time
 from typing import Any, Callable, Dict, List, Optional
 
 from .state import AgentState
@@ -39,6 +41,40 @@ from .tools import count_failures_by_field, eligibility_filter
 
 # A callable that takes (system_prompt, user_prompt) and returns raw text.
 LLMCallFn = Callable[[str, str], str]
+
+# "uvicorn.error" is uvicorn's general-purpose logger, so these lines show up
+# in the server console without extra logging config. The API key is never
+# included in any log line.
+_llm_log = logging.getLogger("uvicorn.error")
+
+
+def _logged_urlopen(step: str, model: str, req: Any, timeout: int) -> str:
+    import urllib.error
+    import urllib.request
+
+    started = time.monotonic()
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            status = resp.status
+            body = json.loads(resp.read())
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", "replace")[:300]
+        _llm_log.error(
+            "[sourcefix][llm] step=%s model=%s status=%s ok=false duration_ms=%d error=%s",
+            step, model, exc.code, (time.monotonic() - started) * 1000, detail,
+        )
+        raise
+    except Exception as exc:  # timeouts, DNS, connection resets
+        _llm_log.error(
+            "[sourcefix][llm] step=%s model=%s status=n/a ok=false duration_ms=%d error=%r",
+            step, model, (time.monotonic() - started) * 1000, exc,
+        )
+        raise
+    _llm_log.info(
+        "[sourcefix][llm] step=%s model=%s status=%s ok=true duration_ms=%d",
+        step, model, status, (time.monotonic() - started) * 1000,
+    )
+    return body["choices"][0]["message"]["content"]
 
 
 # ---------------------------------------------------------------------------
@@ -73,6 +109,8 @@ def _default_groq_call(
             "GROQ_API_KEY is not set; cannot call Groq for propose_relaxation_node."
         )
 
+    model = os.environ.get("GROQ_PROPOSE_MODEL") or os.environ.get("GROQ_MODEL") or model
+
     payload = json.dumps(
         {
             "model": model,
@@ -94,9 +132,7 @@ def _default_groq_call(
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        body = json.loads(resp.read())
-    return body["choices"][0]["message"]["content"]
+    return _logged_urlopen("propose_relaxation", model, req, timeout=30)
 
 
 def _default_groq_finalize_call(
@@ -124,6 +160,8 @@ def _default_groq_finalize_call(
             "GROQ_API_KEY is not set; cannot call Groq for rank_and_finalize_node."
         )
 
+    model = os.environ.get("GROQ_FINALIZE_MODEL") or os.environ.get("GROQ_MODEL") or model
+
     payload = json.dumps(
         {
             "model": model,
@@ -145,9 +183,7 @@ def _default_groq_finalize_call(
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        body = json.loads(resp.read())
-    return body["choices"][0]["message"]["content"]
+    return _logged_urlopen("finalize", model, req, timeout=60)
 
 
 # ---------------------------------------------------------------------------

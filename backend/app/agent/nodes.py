@@ -119,6 +119,7 @@ def _default_groq_call(
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0,
+            "seed": 42,
         }
     ).encode("utf-8")
 
@@ -170,6 +171,7 @@ def _default_groq_finalize_call(
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0,
+            "seed": 42,
         }
     ).encode("utf-8")
 
@@ -279,15 +281,37 @@ def _build_propose_user_prompt(
     soft_constraints: List[Dict[str, Any]],
     soft_failure_counts: Dict[str, int],
     already_tried: List[Dict[str, Any]],
+    filter_result: Optional[Dict[str, Any]] = None,
+    suppliers: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     lines = ["Soft constraints currently in play (choose ONLY from these):"]
+    results = (filter_result or {}).get("results", {})
+    supplier_lookup = {
+        s.get("source_id", s.get("supplier_id")): s for s in (suppliers or [])
+    }
+
     for c in soft_constraints:
+        field = c["field"]
         current = c.get("acceptable_values", c.get("value"))
-        fails = soft_failure_counts.get(c["field"], 0)
-        lines.append(
-            f'- field="{c["field"]}", current_value={current!r}, '
+        fails = soft_failure_counts.get(field, 0)
+        line = (
+            f'- field="{field}", current_value={current!r}, '
             f"suppliers_currently_failing_this={fails}"
         )
+        if filter_result and suppliers:
+            near_misses = []
+            for sid, field_res in results.items():
+                if not field_res.get(field, {}).get("passed", True):
+                    other_fails = [f for f, r in field_res.items() if f != field and not r.get("passed", True)]
+                    if not other_fails:
+                        sup = supplier_lookup.get(sid, {})
+                        val = sup.get(field)
+                        if val is not None:
+                            near_misses.append(val)
+            line += f", suppliers_rescued_if_relaxed={len(near_misses)}"
+            if near_misses:
+                line += f", nearest_failing_values={near_misses}"
+        lines.append(line)
 
     if already_tried:
         lines.append("\nRelaxations already applied this run (do not repeat):")
@@ -328,7 +352,13 @@ def propose_relaxation_node(
     soft_failure_counts = {c["field"]: fail_counts.get(c["field"], 0) for c in soft_constraints}
     already_tried = state.get("visited_relaxations", [])
 
-    user_prompt = _build_propose_user_prompt(soft_constraints, soft_failure_counts, already_tried)
+    user_prompt = _build_propose_user_prompt(
+        soft_constraints,
+        soft_failure_counts,
+        already_tried,
+        filter_result=state.get("filter_result"),
+        suppliers=state.get("suppliers", []),
+    )
 
     raw = llm_call(_PROPOSE_SYSTEM_PROMPT, user_prompt)
     proposal = _try_parse_json(raw)

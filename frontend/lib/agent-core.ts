@@ -136,6 +136,7 @@ async function callGroqAPI(
           { role: "user", content: userPrompt },
         ],
         temperature: 0,
+        seed: 42,
         response_format: { type: "json_object" },
       }),
     });
@@ -357,9 +358,21 @@ export async function* runAgentStream(
     let llmProposal: { field?: string; new_value?: unknown; rationale?: string } | null = null;
     let fallbackReason = "";
     try {
-      const softLines = softConstraints.map(
-        (c) => `- field="${c.field}", current_value=${fmt(constraintValue(c))}, suppliers_currently_failing_this=${counts[c.field] || 0}`,
-      );
+      const softLines = softConstraints.map((c) => {
+        const failers = Object.entries(filterRes.results)
+          .filter(([, checks]) => checks[c.field] && !checks[c.field].passed)
+          .map(([sid]) => sid);
+        const soleFailers = failers.filter((sid) =>
+          Object.entries(filterRes.results[sid]).every(([f, r]) => r.passed || f === c.field),
+        );
+        const nearMissVals = soleFailers
+          .map((sid) => {
+            const sup = state.suppliers.find((s) => s.supplier_id === sid);
+            return sup ? supplierFieldValue(sup, c.field) : undefined;
+          })
+          .filter((v) => v !== undefined && v !== null);
+        return `- field="${c.field}", current_value=${fmt(constraintValue(c))}, suppliers_currently_failing_this=${counts[c.field] || 0}, suppliers_rescued_if_relaxed=${soleFailers.length}${nearMissVals.length ? `, nearest_failing_values=[${nearMissVals.join(", ")}]` : ""}`;
+      });
       const tried = state.relaxation_ledger.filter((e) => e.accepted).map((e) => `- field="${e.field}", new_value=${fmt(e.new_value)}`);
       const userPrompt =
         `Soft constraints currently in play (choose ONLY from these):\n${softLines.join("\n")}\n\n` +

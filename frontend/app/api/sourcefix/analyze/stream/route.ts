@@ -17,6 +17,7 @@ export async function POST(request: Request) {
   const body = text ? JSON.parse(text) : {};
 
   if (process.env.SOURCEFIX_BACKEND_URL) {
+    console.log(`[sourcefix][engine] analyze/stream -> proxy to Python backend at ${process.env.SOURCEFIX_BACKEND_URL}`);
     const res = await fetch(`${process.env.SOURCEFIX_BACKEND_URL}/api/analyze/stream`, {
       method: "POST",
       headers: { "content-type": "application/json", accept: "text/event-stream" },
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
     return new Response(res.body, { status: res.status, headers: { "content-type": "text/event-stream" } });
   }
 
+  console.log("[sourcefix][engine] analyze/stream -> TypeScript engine (lib/agent-core.ts), SOURCEFIX_BACKEND_URL not set");
   const suppliers = body.suppliers || getStoreSuppliers();
   const constraints = body.constraints || defaultConstraints;
   const maxIterations = body.max_iterations || 5;
@@ -45,10 +47,11 @@ export async function POST(request: Request) {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
         }
       } catch (err: any) {
+        const message = err.message || "Agent execution failed.";
+        console.error(`[sourcefix][agent] run failed: ${message}`);
         const errorPayload = {
-          node: "error",
           status: "error",
-          payload: { error: err.message || "Agent execution failed." },
+          error: message,
         };
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorPayload)}\n\n`));
       } finally {

@@ -24,9 +24,11 @@ import {
   BaselineResponse,
   demoAnalyze,
   demoBaseline,
+  FALLBACK_LABEL,
   getSupplierName,
   product,
   requirements,
+  type LlmCallRecord,
   type Relaxation,
   type ShortlistItem,
 } from "../lib/sourcefix";
@@ -47,8 +49,18 @@ const initialTrace: TraceLine[] = [
 ];
 
 function formatValue(value: unknown) {
+  if (value === undefined || value === null) return "(not reported)";
   if (typeof value === "number") return value.toLocaleString();
+  if (Array.isArray(value)) return value.join(" · ");
   return String(value);
+}
+
+function isFallbackEntry(item: Relaxation) {
+  return item.source === "deterministic_fallback";
+}
+
+function isFallbackExplanation(item: ShortlistItem) {
+  return item.explanation_source === "deterministic_fallback" || item.explanation == null;
 }
 
 function statusLabel(status: string) {
@@ -208,6 +220,7 @@ export default function Home() {
       const decoder = new TextDecoder();
       let buffer = "";
       let latest: Partial<AnalyzeResponse> = {};
+      let llmCallsSeen = 0;
       while (true) {
         const { value, done } = await reader.read();
         buffer += decoder.decode(value ?? new Uint8Array(), { stream: !done });
@@ -221,8 +234,16 @@ export default function Home() {
             status?: string;
             node?: string;
             output?: Partial<AnalyzeResponse> & {
-              filter_result?: { eligible?: string[] };
-              pending_relaxation?: { field: string; new_value: number | string };
+              filter_result?: { eligible?: string[] } | null;
+              eligible_suppliers?: string[];
+              pending_relaxation?: {
+                field?: string;
+                new_value?: unknown;
+                rationale?: string;
+                source?: string;
+                fallback_reason?: string;
+                _parse_failed?: boolean;
+              } | null;
             };
           };
           if (payload.error) {
@@ -231,17 +252,49 @@ export default function Home() {
           if (payload.node && payload.output) {
             const output = payload.output;
             latest = { ...latest, ...output };
+
+            // One trace line per LLM call (TS engine records these on state).
+            const calls: LlmCallRecord[] = output.llm_calls ?? [];
+            for (const call of calls.slice(llmCallsSeen)) {
+              addTrace(
+                "llm",
+                call.ok
+                  ? `${call.step} (iteration ${call.iteration}) called ${call.model}: HTTP ${call.status}, ${call.duration_ms} ms`
+                  : `${call.step} (iteration ${call.iteration}) LLM call FAILED: ${call.error ?? `HTTP ${call.status}`}`,
+              );
+            }
+            llmCallsSeen = Math.max(llmCallsSeen, calls.length);
+
             const isTerminal = payload.node === "finalize" || payload.node === "give_up";
-            const lineMessage =
-              payload.node === "run_filter"
-                ? `${output.filter_result?.eligible?.length ?? 0} eligible suppliers after the current constraints`
-                : payload.node === "propose_relaxation"
-                  ? `Considering relaxing ${output.pending_relaxation?.field?.replaceAll("_", " ") ?? "a soft constraint"}`
-                  : payload.node === "apply_relaxation"
-                    ? "Applied a reviewable soft-constraint relaxation"
-                    : isTerminal
-                      ? output.message ?? "Analysis complete"
-                      : "SourceFix is working";
+            let lineMessage = "SourceFix is working";
+            if (payload.node === "run_filter") {
+              const eligible = output.filter_result?.eligible ?? output.eligible_suppliers;
+              lineMessage = eligible
+                ? `${eligible.length} eligible supplier(s) under the current constraints${eligible.length ? `: ${eligible.join(", ")}` : ""}`
+                : "Filter ran (eligible count not reported by engine)";
+            } else if (payload.node === "propose_relaxation") {
+              const p = output.pending_relaxation;
+              if (!p || p._parse_failed) {
+                lineMessage = "LLM proposal could not be parsed as JSON; nothing proposed";
+              } else {
+                const tag = p.source === "deterministic_fallback" ? `[${FALLBACK_LABEL}: ${p.fallback_reason}]` : "[LLM]";
+                lineMessage = `${tag} Proposed ${p.field} → ${formatValue(p.new_value)}${p.rationale ? ` — ${p.rationale}` : ""}`;
+              }
+            } else if (payload.node === "apply_relaxation") {
+              const ledgerSoFar = output.relaxation_ledger ?? [];
+              const last = ledgerSoFar[ledgerSoFar.length - 1];
+              if (!last) lineMessage = "Relaxation step ran (no ledger entry reported)";
+              else if (last.accepted) {
+                lineMessage = `Applied ${last.field}: ${formatValue(last.old_value)} → ${formatValue(last.new_value)}${isFallbackEntry(last) ? ` [${FALLBACK_LABEL}]` : " [LLM proposal]"}`;
+              } else {
+                lineMessage = `Rejected: ${last.reason ?? "no reason given"}`;
+              }
+            } else if (isTerminal) {
+              lineMessage = output.message ?? "Analysis complete";
+              const list = output.final_shortlist ?? [];
+              const fb = list.filter(isFallbackExplanation).length;
+              if (fb && !lineMessage.includes(FALLBACK_LABEL)) lineMessage += ` ${fb} explanation(s): ${FALLBACK_LABEL}.`;
+            }
             addTrace(payload.node, lineMessage, isTerminal);
           }
           if (payload.status === "complete") {
@@ -520,7 +573,10 @@ export default function Home() {
                             <span className="supplier-id">{candidate.supplier_id}</span>
                             <strong>{getSupplierName(candidate.supplier_id, baseline)}</strong>
                           </div>
-                          <p>{candidate.explanation}</p>
+                          {isFallbackExplanation(candidate) && (
+                            <span className="constraint-tag soft" style={{ display: "inline-block", marginBottom: 6 }}>{FALLBACK_LABEL}</span>
+                          )}
+                          <p>{candidate.explanation ?? "No explanation: the ranking LLM reply could not be parsed, so the filter's own order is shown."}</p>
                           <button className="text-button" onClick={() => showNotice(`${candidate.supplier_id} added to the sourcing brief.`)}>
                             Add to sourcing brief <ArrowRight size={14} />
                           </button>
@@ -551,7 +607,31 @@ export default function Home() {
                   </div>
                   <div className="count-badge"><strong>{ledger.length}</strong> changes</div>
                 </div>
-                {ledger.length ? <div className="ledger-list">{ledger.map((item: Relaxation) => <div className="ledger-row" key={`${item.iteration}-${item.field}`}><div className="ledger-stamp">accepted</div><div className="ledger-copy"><strong>{item.field.replaceAll("_", " ")}</strong><div className="ledger-values"><span>{formatValue(item.old_value)}</span><ArrowRight size={14} /><b>{formatValue(item.new_value)}</b></div><p>{item.rationale}</p></div></div>)}</div> : <div className="empty-state"><FileCheck2 size={28} /><strong>The ledger is empty</strong><span>When SourceFix changes a soft requirement, it will appear here.</span><button className="button secondary" onClick={() => setActiveStep("run")}>Go to agent run</button></div>}
+                {ledger.length ? (
+                  <div className="ledger-list">
+                    {ledger.map((item: Relaxation, index) => {
+                      const field = item.field ?? item.proposal?.field ?? "(no field)";
+                      const fallback = isFallbackEntry(item);
+                      return (
+                        <div className="ledger-row" key={`${item.iteration}-${field}-${index}`}>
+                          <div className="ledger-stamp">{item.accepted ? "accepted" : "rejected"}</div>
+                          <div className="ledger-copy">
+                            <strong>{field.replaceAll("_", " ")}</strong>
+                            <span className="constraint-tag soft" style={{ display: "inline-block", margin: "4px 0" }}>
+                              {fallback ? `${FALLBACK_LABEL}${item.fallback_reason ? ` (${item.fallback_reason})` : ""}` : "LLM proposal"}
+                            </span>
+                            <div className="ledger-values">
+                              <span>{formatValue(item.old_value)}</span>
+                              <ArrowRight size={14} />
+                              <b>{formatValue(item.new_value ?? item.proposal?.new_value)}</b>
+                            </div>
+                            <p>{item.accepted ? item.rationale || "(no rationale returned)" : `Rejected: ${item.reason ?? "no reason given"}`}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : <div className="empty-state"><FileCheck2 size={28} /><strong>The ledger is empty</strong><span>When SourceFix changes a soft requirement, it will appear here.</span><button className="button secondary" onClick={() => setActiveStep("run")}>Go to agent run</button></div>}
                 {ledger.length > 0 && <div className="final-callout"><Check size={18} /><div><strong>Shortlist ready for review</strong><span>{analysis?.message ?? "All changes are documented."}</span></div></div>}
               </>
             )}

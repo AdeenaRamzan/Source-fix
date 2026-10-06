@@ -53,9 +53,10 @@ what changed before acting on it. Concretely:
 
 - The tool never emits an RFQ, PO, or supplier-facing communication of any
   kind.
-- A hard requirement (certification, minimum capacity, minimum quality
-  history) is **never** relaxed by the agent under any circumstance — see
-  the evaluation results below.
+- Hard requirements (certification, minimum capacity, minimum quality
+  history) are evaluated by deterministic code, not by the LLM. A code gate
+  rejects any LLM proposal that targets a hard constraint — see the
+  evaluation results below.
 - Moving from "shortlisted by SourceFix" to "approved supplier" is, by
   design, a separate human action this tool does not perform.
 
@@ -65,16 +66,14 @@ All numbers below are pulled directly from `backend/tests/` (pytest) and
 `demo_cases/` (generated against the real FastAPI app and the bundled
 dataset; see `demo_cases/EXPLANATION.md` for the full methodology,
 including the note on simulated LLM calls). `demo_cases/verify_citations.py`
-independently re-derives the citation numbers from the raw response JSON —
-it is not a self-report by the agent.
+traces the citation numbers from the raw response JSON.
 
 | Metric | Result | Source |
 |---|---|---|
-| Mandatory (hard) constraint satisfaction rate | **100%** — 0 violations across every relaxation attempt in every run | `test_hard_constraint_is_never_relaxed_under_repeated_pressure` (4/4 adversarial hard-field proposals rejected) + demo cases 1 & 3 (4 soft-field proposals accepted, 0 hard-field proposals ever applied) |
-| Citation coverage | **100%** (10/10 field claims traced) | `demo_cases/verify_citations.py` — every `field=value` claim in case 1's final shortlist independently matched against `cite_lookup()` on the raw supplier record |
-| Unsupported-claim rate | **0%** (0/10) | Same script; see "how checked" below |
+| Mandatory (hard) constraint enforcement | Rejects proposals targeting hard fields | Evaluated by deterministic code; `test_hard_constraint_is_never_relaxed_under_repeated_pressure` (4/4 adversarial hard-field proposals rejected) + demo cases 1 & 3 (4 soft-field proposals accepted, 0 hard-field proposals applied) |
+| Citation audit | 10 of 10 field claims traced (demo case 1) | `demo_cases/verify_citations.py` — every `field=value` claim in case 1's final shortlist matched against `cite_lookup()` on the raw supplier record (demo cases only, small synthetic dataset) |
 | Baseline comparison | **0 eligible** (rules-only baseline) → **2 eligible** after 1 accepted relaxation (case 1); **0 → 0** when every candidate fails a hard requirement (case 3, correctly no false rescue) | `case1_successful_relaxation.json`, `case3_failure_manual_review.json` |
-| Full test suite | **21/21 passed** in 0.32s | `pytest -q` |
+| Full test suite | **25/25 passed** | `pytest -q` (15 test_tools, 6 test_agent, 4 test_suppliers_crud) |
 
 **Per-case iteration count / completion time:**
 
@@ -91,9 +90,9 @@ control-flow/graph overhead only, **not** real LLM API latency. A live run
 will be dominated by the Groq round-trips instead.
 
 **Per-case citation audit breakdown:**
-- **Case 1 (Successful):** Emits a 2-supplier shortlist with LLM-written ranking explanations. `verify_citations.py` regex-extracts every `field=value` claim and verifies 100% (10/10) match `cite_lookup()` directly against `source_row` records in `suppliers.json` (0 unsupported claims).
+- **Case 1 (Successful):** Emits a 2-supplier shortlist with LLM-written ranking explanations. `verify_citations.py` regex-extracts every `field=value` claim and verifies that 10 of 10 match `cite_lookup()` directly against `source_row` records in `suppliers.json` (demo cases only, small synthetic dataset).
 - **Case 2 (Ambiguous):** Baseline eligibility filter call only — no agent loop or ranking explanation generated.
-- **Case 3 (Failure):** Bounded negotiation loop that fails closed with `status: "no_shortlist_found"` and `final_shortlist: []`. Because no shortlist is generated, zero ranking claims are emitted to cite, guaranteeing 0 fabricated shortlist claims by design.
+- **Case 3 (Failure):** Bounded negotiation loop that fails closed with `status: "no_shortlist_found"` and `final_shortlist: []`. Because no shortlist is generated, zero ranking claims are emitted to cite.
 
 ## 5. Architecture and data flow
 
@@ -142,8 +141,9 @@ negotiation loop: `run_filter` → `decide_next` routes to `finalize` (if
 anyone's eligible), `give_up` (if `max_iterations` is exhausted), or
 `propose_relaxation` → `apply_relaxation` → back to `run_filter`. Two nodes
 call an LLM — `propose_relaxation_node` (Groq, fast/cheap, runs per
-attempt) and `rank_and_finalize_node` (Groq, llama-3.3-70b-versatile,
-careful, runs once — see `graph.py`'s docstring for the reasoning) — but
+attempt) and `rank_and_finalize_node` (Groq, careful, runs once — models are
+configured via environment variables `GROQ_MODEL`, `GROQ_PROPOSE_MODEL`,
+`GROQ_FINALIZE_MODEL`; the demo used `openai/gpt-oss-120b`) — but
 neither is trusted blindly:
 `apply_relaxation_node` re-derives `constraint_type` from
 `working_constraints` (code-controlled, never LLM-written) before ever
